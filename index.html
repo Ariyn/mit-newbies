@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>2016 MIT 신입생 과제 페이지</title>
+
+		<script>
+			window.$ = window.jQuery = require('./jquery-2.2.2.min');
+			window.ipc = require('electron').ipcRenderer;
+		</script>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class=".col-md-4 .col-md-offset-4">
+					<h1>2016년도 MIT 신입생 과제 제출 페이지 입니다.</h1>
+					<form class="form" action="./server/upload.py" method="post" enctype="multipart/form-data">
+						<div class="form-group">
+							<label for="fileInput">파일 선택</label>
+							<input type="file" name="uploadFiles" multiple id="fileInput">
+							<p class="help-block">여러 파일 동시에 업로드 가능</p>
+						</div>
+						<div class="form-group">
+							<label for="fileList">업로드 될 파일 목록</label>
+							<ul id="fileList"> </ul>
+						</div>
+						<input type="hidden" name="id">
+						<input type="hidden" name="easy_checker">
+						<button type="submit" class="btn btn-primary">전송</button>
+					</form>
+
+					<button id="NextPage" class="btn btn-primary">nextPabe</button>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(document).ready(function() {
+				updateFileList();
+			})
+			$("#fileInput").change(function(e) {
+				updateFileList()
+			})
+			$("#NextPage").click(function(e) {
+				ipc.send("ChangePage");
+			})
+
+			function updateFileList() {
+				console.log("called")
+				$("#fileList").empty()
+
+				var files = $("#fileInput").prop("files")
+				console.log(files)
+				console.log(files.length)
+				for(var i=0; i<files.length; i++) {
+					console.log("<li>"+files[i].name+"</li>")
+
+					$("#fileList").append("<li>"+files[i].name+"</li>")
+				}
+			}
+		</script>
+	</body>
+</html>
